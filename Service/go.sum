@@ -1,0 +1,4 @@
+github.com/ocsen-hoc-code/kafka-go v0.0.0-20190716152036-23b5223ce91e h1:Yntd5rp1CfiZrx5oQ3K5FF2oG3ISV4kS37jojRDNrXo=
+github.com/ocsen-hoc-code/kafka-go v0.0.0-20190716152036-23b5223ce91e/go.mod h1:un0XzXgWaG/2MhmvmSRztaVgnELOYliK1oaR4tAZfM0=
+gopkg.in/confluentinc/confluent-kafka-go.v1 v1.1.0 h1:roy97m/3wj9/o8OuU3sZ5wildk30ep38k2x8nhNbKrI=
+gopkg.in/confluentinc/confluent-kafka-go.v1 v1.1.0/go.mod h1:ZdI3yfYmdNSLQPNCpO1y00EHyWaHG5EnQEyL/ntAegY=

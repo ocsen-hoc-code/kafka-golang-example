@@ -1,7 +1,9 @@
 version: '3.6'
 networks:
   kafka-example-network:
-    driver: bridge
+     ipam:
+      config:
+        - subnet: 172.80.0.0/24
 
 services:
   zookeeper:
@@ -13,16 +15,18 @@ services:
       - ZOO_SERVER_USERS=ocsen_zookeeper
       - ZOO_SERVER_PASSWORDS=ocsen_zookeeper_password
     networks:
-      - kafka-example-network
+      kafka-example-network:
+        ipv4_address: 172.80.0.2
 
   kafka:
     image: 'bitnami/kafka:latest'
-    hostname: kafka.example.com
+    # hostname: kafka.example.com
     ports:
       - '9092'
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      # - KAFKA_CFG_ZOOKEEPER_CONNECT=172.80.0.2:2181
       # - KAFKA_CFG_LISTENERS=SASL_SSL://:9092
       # - KAFKA_CFG_ADVERTISED_LISTENERS=SASL_SSL://:9092
       - KAFKA_ZOOKEEPER_USER=ocsen_zookeeper
@@ -35,5 +39,40 @@ services:
     # volumes:
     #   - './kafka-key/kafka.keystore.jks:/opt/bitnami/kafka/conf/certs/kafka.keystore.jks:ro'
     #   - './kafka-key/kafka.truststore.jks:/opt/bitnami/kafka/conf/certs/kafka.truststore.jks:ro'
+    # links:
+    #   - zookeeper
+    # volumes:
+    #   - /path/to/server.properties:/opt/bitnami/kafka/conf/server.properties
+    depends_on:
+      - zookeeper
     networks:
-      - kafka-example-network
+      kafka-example-network:
+        ipv4_address: 172.80.0.3
+
+  service:
+    image: 'ocsen-golang-service:latest'
+    volumes:
+      - "./Service:/src/service/"
+    networks:
+      kafka-example-network:
+        ipv4_address: 172.80.0.4
+    # links:
+    #   - kafka
+    #   - zookeeper
+    depends_on:
+      - kafka
+      - zookeeper
+
+  consumer:
+    image: 'ocsen-golang-consumer:latest'
+    volumes:
+      - "./Consumer:/src/consumer/"
+    networks:
+      kafka-example-network:
+        ipv4_address: 172.80.0.5
+    # links:
+    #   - kafka
+    #   - zookeeper
+    depends_on:
+      - kafka
+      - zookeeper
